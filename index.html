@@ -279,6 +279,73 @@
                     </p>
                 </div>
             </div>
+
+            <!-- New Live Feature: Custom Loan Application Tester -->
+            <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5 space-y-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="text-sm font-semibold text-white flex items-center space-x-2">
+                            <i data-lucide="user-plus" class="w-4 h-4 text-emerald-400"></i>
+                            <span>Test a Real-Time Loan Application</span>
+                        </h4>
+                        <p class="text-xs text-slate-400">Type in any custom applicant details to test the bank's live approval system</p>
+                    </div>
+                    <span class="text-[11px] px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">Interactive Tool</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-5 gap-3 pt-1 text-xs">
+                    <div>
+                        <label class="block text-slate-400 mb-1">Applicant Name</label>
+                        <input type="text" id="app-name" value="Rahul Sharma" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1">Requested Loan ($)</label>
+                        <input type="number" id="app-amount" value="50000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1">Monthly Income ($)</label>
+                        <input type="number" id="app-income" value="6500" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1">Credit Score (FICO)</label>
+                        <input type="number" id="app-score" value="720" min="300" max="850" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white font-mono">
+                    </div>
+                    <div class="flex items-end">
+                        <button onclick="submitCustomLoan()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg transition shadow-md">
+                            Check Approval
+                        </button>
+                    </div>
+                </div>
+
+                <!-- History of submitted loans -->
+                <div class="mt-4 pt-3 border-t border-slate-700/50">
+                    <span class="text-xs text-slate-400 font-semibold block mb-2">Live Application Results:</span>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs text-slate-300">
+                            <thead class="bg-slate-900 text-slate-400 text-[11px]">
+                                <tr>
+                                    <th class="py-2 px-3">Applicant</th>
+                                    <th class="py-2 px-3">Loan Amount</th>
+                                    <th class="py-2 px-3">Income</th>
+                                    <th class="py-2 px-3">Credit Score</th>
+                                    <th class="py-2 px-3">Est. Monthly EMI</th>
+                                    <th class="py-2 px-3">Decision</th>
+                                </tr>
+                            </thead>
+                            <tbody id="app-history-body" class="divide-y divide-slate-800">
+                                <tr>
+                                    <td class="py-2 px-3 font-medium text-white">Sample: Sarah Jenkins</td>
+                                    <td class="py-2 px-3 font-mono">$35,000</td>
+                                    <td class="py-2 px-3 font-mono">$5,800/mo</td>
+                                    <td class="py-2 px-3 text-emerald-400 font-bold font-mono">745</td>
+                                    <td class="py-2 px-3 font-mono">$685/mo</td>
+                                    <td class="py-2 px-3"><span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/20">APPROVED ✅</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- ======================================================= -->
@@ -311,11 +378,19 @@
 
             <!-- Customer Alert Table -->
             <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
-                <h4 class="text-sm font-semibold text-white mb-1">High-Balance Customers Showing Warning Signs</h4>
-                <p class="text-xs text-slate-400 mb-4">These customers have lots of money with us, but haven't swiped their card or used the app in months.</p>
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+                    <div>
+                        <h4 class="text-sm font-semibold text-white">High-Balance Customers Showing Warning Signs</h4>
+                        <p class="text-xs text-slate-400">These customers have lots of money with us, but haven't used their card or app in months.</p>
+                    </div>
+                    <!-- Live Search Bar -->
+                    <div class="relative w-full sm:w-72">
+                        <input type="text" id="cust-search" onkeyup="filterCustomers()" placeholder="Search ID (e.g. 10227) or Region..." class="w-full pl-3 pr-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500">
+                    </div>
+                </div>
 
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs text-slate-300">
+                    <table id="table-customers" class="w-full text-left text-xs text-slate-300">
                         <thead class="bg-slate-900 text-slate-400 uppercase text-[11px] border-b border-slate-700">
                             <tr>
                                 <th class="py-3 px-4">Customer ID</th>
@@ -487,15 +562,23 @@
         <!-- ======================================================= -->
         <section id="tab-sql" class="tab-content hidden space-y-6">
             <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
-                <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center justify-between mb-3">
                     <div>
                         <h4 class="text-base font-semibold text-white">Data Warehouse Queries (SQL)</h4>
-                        <p class="text-xs text-slate-400">Production queries powering the automated reporting pipeline</p>
+                        <p class="text-xs text-slate-400">Select a query below to inspect the database code powering the dashboard</p>
                     </div>
                     <button onclick="copySql()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded text-xs flex items-center space-x-1">
                         <i data-lucide="copy" class="w-3.5 h-3.5"></i>
                         <span id="copy-btn-text">Copy Code</span>
                     </button>
+                </div>
+
+                <!-- Query Buttons -->
+                <div class="flex flex-wrap gap-2 mb-3">
+                    <button onclick="switchSqlQuery('loans')" id="qbtn-loans" class="q-btn px-3 py-1.5 rounded text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-medium">1. Loans by Category</button>
+                    <button onclick="switchSqlQuery('late')" id="qbtn-late" class="q-btn px-3 py-1.5 rounded text-xs bg-slate-800 text-slate-300 hover:bg-slate-700">2. Late Borrowers (30+ Days)</button>
+                    <button onclick="switchSqlQuery('safe')" id="qbtn-safe" class="q-btn px-3 py-1.5 rounded text-xs bg-slate-800 text-slate-300 hover:bg-slate-700">3. High Credit Score Customers</button>
+                    <button onclick="switchSqlQuery('midnight')" id="qbtn-midnight" class="q-btn px-3 py-1.5 rounded text-xs bg-slate-800 text-slate-300 hover:bg-slate-700">4. Suspicious Midnight Transfers</button>
                 </div>
 
                 <div class="bg-slate-950 border border-slate-800 rounded-lg p-4 font-mono text-xs text-emerald-400 overflow-x-auto">
@@ -626,6 +709,113 @@ Suspicious Transactions Flagged: 486 out of 40,000
             const btn = document.getElementById('copy-btn-text');
             btn.innerText = 'Copied!';
             setTimeout(() => { btn.innerText = 'Copy Code'; }, 2000);
+        }
+
+        // 1. Submit Custom Loan Application Live
+        function submitCustomLoan() {
+            const name = document.getElementById('app-name').value.trim() || 'New Applicant';
+            const amt = parseFloat(document.getElementById('app-amount').value) || 25000;
+            const income = parseFloat(document.getElementById('app-income').value) || 4000;
+            const score = parseInt(document.getElementById('app-score').value) || 650;
+
+            const r = 0.065 / 12;
+            const n = 36;
+            const emi = Math.round(amt * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1));
+            const dti = Math.round((emi / income) * 100);
+
+            let decBadge = "";
+            if (score >= 670 && dti <= 40) {
+                decBadge = '<span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/20">APPROVED ✅</span>';
+            } else if (score >= 600 && dti <= 50) {
+                decBadge = '<span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 font-bold border border-blue-500/20">CONDITIONAL ⚠️</span>';
+            } else {
+                decBadge = '<span class="px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 font-bold border border-rose-500/20">REJECTED ❌</span>';
+            }
+
+            const row = document.createElement('tr');
+            row.className = "hover:bg-slate-700/30 bg-emerald-950/20 transition";
+            row.innerHTML = `
+                <td class="py-2 px-3 font-medium text-white">${name}</td>
+                <td class="py-2 px-3 font-mono">$${amt.toLocaleString()}</td>
+                <td class="py-2 px-3 font-mono">$${income.toLocaleString()}/mo</td>
+                <td class="py-2 px-3 font-mono font-bold ${score >= 670 ? 'text-emerald-400' : 'text-amber-400'}">${score}</td>
+                <td class="py-2 px-3 font-mono">$${emi.toLocaleString()}/mo (${dti}% DTI)</td>
+                <td class="py-2 px-3">${decBadge}</td>
+            `;
+
+            const tbody = document.getElementById('app-history-body');
+            tbody.insertBefore(row, tbody.firstChild);
+        }
+
+        // 2. Filter Customer Table by Search Input
+        function filterCustomers() {
+            const query = document.getElementById('cust-search').value.toLowerCase();
+            const rows = document.querySelectorAll('#table-customers tbody tr');
+            rows.forEach(r => {
+                const text = r.innerText.toLowerCase();
+                r.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        // 3. Switch SQL Queries in Tab 6
+        const SQL_QUERIES = {
+            loans: `-- Query 1: Calculate Total Bank Loans and Late Payments by Loan Type
+SELECT 
+    loan_type,
+    COUNT(loan_id) AS total_loans_given,
+    SUM(principal_amount) AS total_money_loaned_usd,
+    ROUND(AVG(interest_rate_pct), 2) AS avg_interest_rate,
+    SUM(CASE WHEN days_past_due >= 90 THEN principal_amount ELSE 0 END) AS defaulted_loans_usd
+FROM fact_loans
+GROUP BY loan_type
+ORDER BY total_money_loaned_usd DESC;`,
+
+            late: `-- Query 2: Find Top 10 Accounts Late on Loan Payments (30+ Days)
+SELECT 
+    customer_id,
+    loan_type,
+    principal_amount,
+    days_past_due,
+    monthly_installment
+FROM fact_loans
+WHERE days_past_due >= 30
+ORDER BY days_past_due DESC
+LIMIT 10;`,
+
+            safe: `-- Query 3: High Credit Score Customers with Large Balances (>750 FICO)
+SELECT 
+    customer_id,
+    credit_score,
+    annual_income,
+    account_tier,
+    deposit_balance
+FROM dim_customer
+WHERE credit_score >= 750
+ORDER BY deposit_balance DESC
+LIMIT 10;`,
+
+            midnight: `-- Query 4: Suspicious Midnight Transactions (Between 1:00 AM and 4:00 AM)
+SELECT 
+    transaction_id,
+    customer_id,
+    amount_usd,
+    channel,
+    transaction_timestamp
+FROM fact_transactions
+WHERE is_high_risk_flag = 1
+ORDER BY transaction_timestamp DESC
+LIMIT 10;`
+        };
+
+        function switchSqlQuery(type) {
+            document.getElementById('sql-code-box').innerText = SQL_QUERIES[type] || SQL_QUERIES['loans'];
+            document.querySelectorAll('.q-btn').forEach(b => {
+                b.className = "q-btn px-3 py-1.5 rounded text-xs bg-slate-800 text-slate-300 hover:bg-slate-700";
+            });
+            const activeBtn = document.getElementById('qbtn-' + type);
+            if (activeBtn) {
+                activeBtn.className = "q-btn px-3 py-1.5 rounded text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-medium";
+            }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
