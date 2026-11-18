@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinVanguard 360° | Complete Project Master Dossier</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        code, pre { font-family: 'JetBrains Mono', monospace; }
+        @media print {
+            .no-print { display: none; }
+            body { background: white !important; color: black !important; }
+            .print-card { border: 1px solid #ccc !important; background: white !important; color: black !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen p-6 sm:p-12 antialiased">
+    <div class="max-w-5xl mx-auto space-y-8">
+
+        <!-- Top Print / PDF Button -->
+        <div class="no-print flex justify-between items-center bg-slate-800 p-4 rounded-xl border border-slate-700">
+            <div>
+                <span class="font-bold text-emerald-400">📄 Complete Project Knowledge Base Dossier</span>
+                <p class="text-xs text-slate-400">Save as PDF by pressing Ctrl+P or clicking the button</p>
+            </div>
+            <button onclick="window.print()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold shadow transition flex items-center space-x-2">
+                <span>🖨️ Save as PDF / Print</span>
+            </button>
+        </div>
+
+        <!-- Header -->
+        <div class="border-b border-slate-800 pb-6">
+            <h1 class="text-3xl font-extrabold text-white">FinVanguard 360°</h1>
+            <p class="text-emerald-400 font-semibold text-sm mt-1">Commercial Banking Intelligence & Credit Risk Analytics Platform</p>
+            <div class="flex flex-wrap gap-4 mt-4 text-xs text-slate-400">
+                <span>🌐 <b>Live URL:</b> <a href="https://finvanguard-bank-analytics.onrender.com/" class="text-cyan-400 underline">finvanguard-bank-analytics.onrender.com</a></span>
+                <span>📂 <b>GitHub:</b> <a href="https://github.com/abhiramkusumanchi/finvanguard-bank-analytics" class="text-cyan-400 underline">github.com/abhiramkusumanchi/finvanguard-bank-analytics</a></span>
+            </div>
+        </div>
+
+        <!-- 1. Executive Summary -->
+        <section class="space-y-3">
+            <h2 class="text-xl font-bold text-white border-l-4 border-emerald-500 pl-3">1. Executive Summary & Problem Solved</h2>
+            <p class="text-xs text-slate-300 leading-relaxed">
+                Banks face two existential threats to profitability: <b>Credit Loan Defaults</b> (bad borrowers who stop paying) and <b>Deposit Flight</b> (high-value customers taking their savings to competitor banks). 
+                <b>FinVanguard 360°</b> is an end-to-end analytics platform that monitors <b>$1.35 Billion in Assets Under Management (AUM)</b>, models credit risk via an automated underwriting scorecard, flags <b>$115.9 Million in deposit flight risk</b>, and provides an interactive macroeconomic stress-test simulator.
+            </p>
+        </section>
+
+        <!-- 2. Layman Dictionary -->
+        <section class="space-y-3">
+            <h2 class="text-xl font-bold text-white border-l-4 border-emerald-500 pl-3">2. Plain English Terminology Guide</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs border border-slate-800 rounded-lg">
+                    <thead class="bg-slate-800 text-slate-300">
+                        <tr>
+                            <th class="p-3">Technical Financial Term</th>
+                            <th class="p-3">Plain English Meaning</th>
+                            <th class="p-3">Value in This Project</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800 text-slate-300">
+                        <tr>
+                            <td class="p-3 font-bold text-emerald-400">Portfolio AUM</td>
+                            <td class="p-3">Total money managed by the bank (loans + deposits).</td>
+                            <td class="p-3 font-mono font-bold">$1.35 Billion</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-amber-400">Delinquency Rate</td>
+                            <td class="p-3">Percentage of borrowers behind on loan payments (30+ days late).</td>
+                            <td class="p-3 font-mono font-bold">11.21% ($104.9M)</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-rose-400">Non-Performing Loans (NPL)</td>
+                            <td class="p-3">Severe defaults where borrower hasn't paid in 90+ days.</td>
+                            <td class="p-3 font-mono font-bold">4.88% ($45.7M)</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-cyan-400">Net Interest Margin (NIM)</td>
+                            <td class="p-3">Bank's profit margin (Loan Interest Earned - Deposit Interest Paid).</td>
+                            <td class="p-3 font-mono font-bold">3.78% (8.19% vs 4.41%)</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-purple-400">Basel Expected Loss (EL)</td>
+                            <td class="p-3">Money the bank mathematically expects to lose on bad loans.</td>
+                            <td class="p-3 font-mono font-bold">$8.27 Million</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 3. Key Metrics & Numbers -->
+        <section class="space-y-3">
+            <h2 class="text-xl font-bold text-white border-l-4 border-emerald-500 pl-3">3. Key Numbers to Memorize</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                <div class="p-3 rounded-lg bg-slate-800 border border-slate-700">
+                    <span class="text-slate-400 block">Total Customers</span>
+                    <span class="text-lg font-bold text-white font-mono">10,000</span>
+                    <span class="text-[10px] text-emerald-400 block">77.9% Active</span>
+                </div>
+                <div class="p-3 rounded-lg bg-slate-800 border border-slate-700">
+                    <span class="text-slate-400 block">Disbursed Loans</span>
+                    <span class="text-lg font-bold text-white font-mono">$936.5M</span>
+                    <span class="text-[10px] text-emerald-400 block">6,500 Facilities</span>
+                </div>
+                <div class="p-3 rounded-lg bg-slate-800 border border-slate-700">
+                    <span class="text-slate-400 block">Customer Deposits</span>
+                    <span class="text-lg font-bold text-white font-mono">$409.7M</span>
+                    <span class="text-[10px] text-emerald-400 block">Liquid Savings</span>
+                </div>
+                <div class="p-3 rounded-lg bg-slate-800 border border-slate-700">
+                    <span class="text-slate-400 block">Deposit Flight Risk</span>
+                    <span class="text-lg font-bold text-rose-400 font-mono">$115.9M</span>
+                    <span class="text-[10px] text-rose-400 block">1,422 VIP Accts</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. The 5 Core SQL Queries -->
+        <section class="space-y-4">
+            <h2 class="text-xl font-bold text-white border-l-4 border-emerald-500 pl-3">4. The 5 Core SQL Queries Explained</h2>
+            
+            <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2">
+                <h4 class="text-xs font-bold text-emerald-400">Query 1: Bank Portfolio Rollup & Weighted Yield</h4>
+                <pre class="text-[11px] text-slate-300 overflow-x-auto"><code>SELECT 
+    loan_type,
+    COUNT(loan_id) AS total_loans_given,
+    SUM(principal_amount) AS total_disbursed_usd,
+    ROUND(SUM(principal_amount * interest_rate_pct) / NULLIF(SUM(principal_amount), 0), 2) AS weighted_avg_rate_pct,
+    SUM(CASE WHEN days_past_due >= 90 THEN principal_amount ELSE 0 END) AS defaulted_loans_usd
+FROM fact_loans
+GROUP BY loan_type
+ORDER BY total_disbursed_usd DESC;</code></pre>
+                <p class="text-[11px] text-slate-400"><b>Why it works:</b> Uses <code>NULLIF</code> to prevent division-by-zero and calculates weighted averages so large mortgages ($500k) weigh properly against small personal loans ($5k).</p>
+            </div>
+
+            <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2">
+                <h4 class="text-xs font-bold text-emerald-400">Query 2: Finding Accounts Late on Loans (30+ Days)</h4>
+                <pre class="text-[11px] text-slate-300 overflow-x-auto"><code>SELECT 
+    customer_id, loan_type, principal_amount, days_past_due, monthly_installment
+FROM fact_loans
+WHERE days_past_due >= 30
+ORDER BY days_past_due DESC
+LIMIT 10;</code></pre>
+            </div>
+
+            <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2">
+                <h4 class="text-xs font-bold text-emerald-400">Query 3: Customer Churn & Inactivity</h4>
+                <pre class="text-[11px] text-slate-300 overflow-x-auto"><code>WITH CustomerActivity AS (
+    SELECT c.customer_id, c.account_tier, c.deposit_balance,
+           COALESCE(EXTRACT(DAY FROM ('2026-03-01'::timestamp - MAX(t.transaction_timestamp))), 365) AS days_inactive
+    FROM dim_customer c
+    LEFT JOIN fact_transactions t ON c.customer_id = t.customer_id
+    GROUP BY c.customer_id, c.account_tier, c.deposit_balance
+)
+SELECT * FROM CustomerActivity WHERE days_inactive >= 90 AND deposit_balance >= 25000;</code></pre>
+                <p class="text-[11px] text-slate-400"><b>Why it works:</b> Isolates accounts holding $25,000+ that haven't transacted in 90+ days (the leading indicator of deposit flight).</p>
+            </div>
+        </section>
+
+        <!-- 5. Mathematical Models -->
+        <section class="space-y-3">
+            <h2 class="text-xl font-bold text-white border-l-4 border-emerald-500 pl-3">5. Mathematical & Risk Models</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-300">
+                <div class="p-4 rounded-xl bg-slate-800 border border-slate-700 space-y-2">
+                    <b class="text-white">1. Loan Amortization (Monthly EMI):</b>
+                    <p class="font-mono text-cyan-400">PMT = P * [r(1+r)^n] / [(1+r)^n - 1]</p>
+                    <p class="text-slate-400">Calculates monthly payment from principal, interest rate, and term months.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-800 border border-slate-700 space-y-2">
+                    <b class="text-white">2. Basel II Expected Loss:</b>
+                    <p class="font-mono text-cyan-400">EL = PD * LGD * EAD</p>
+                    <p class="text-slate-400">PD = Probability of Default, LGD = Loss Given Default (20% for mortgage, 50% for unsecured), EAD = Exposure at Default.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-800 border border-slate-700 space-y-2">
+                    <b class="text-white">3. Model Discrimination:</b>
+                    <p class="font-mono text-emerald-400">ROC-AUC = 0.715 | KS Statistic = 33.2%</p>
+                    <p class="text-slate-400">Separates good borrowers from bad borrowers effectively (regulatory benchmark is >30%).</p>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-800 border border-slate-700 space-y-2">
+                    <b class="text-white">4. Scorecard Scaling:</b>
+                    <p class="font-mono text-emerald-400">Score = 600 + (50 / ln(2)) * ln((1-PD)/PD)</p>
+                    <p class="text-slate-400">Converts logistic default probability into standard 300 - 850 credit bureau points.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Interview Script -->
+        <section class="space-y-3 bg-slate-800/80 p-5 rounded-xl border border-emerald-500/30">
+            <h2 class="text-lg font-bold text-emerald-400">6. Verbatim 30-Second Interview Pitch</h2>
+            <p class="text-xs text-slate-200 leading-relaxed italic">
+                "I architected FinVanguard 360°, a commercial banking intelligence platform analyzing 10,000 customers and a $936M loan portfolio in a SQL Star Schema warehouse. 
+                I built an automated loan approval engine evaluating Debt-to-Income and credit scores (achieving a 0.715 AUC and 33.2% KS statistic), an RFM customer churn model that flagged $115.9M in at-risk deposits for relationship manager retention, and an AML anomaly pipeline auditing 40,000 transactions. 
+                Finally, I deployed the interactive platform live to the cloud on Render with an interactive macroeconomic stress-testing simulator."
+            </p>
+        </section>
+
+        <!-- Footer -->
+        <div class="text-center text-xs text-slate-500 border-t border-slate-800 pt-4">
+            FinVanguard 360° Master Project Dossier • Ready for Knowledge Ingestion in any LLM or AI Tool
+        </div>
+
+    </div>
+</body>
+</html>
