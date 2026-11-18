@@ -1,0 +1,117 @@
+{
+  "metadata": {
+    "platform": "FinVanguard 360",
+    "last_updated": "2026-11-18 22:12:07",
+    "currency": "USD"
+  },
+  "executive_summary": {
+    "total_customers": 10000,
+    "total_portfolio_aum": 1346139561.88,
+    "total_loans_disbursed": 936466000.0,
+    "total_deposits_held": 409673561.88,
+    "loan_to_deposit_ratio_pct": 228.59,
+    "active_member_ratio_pct": 77.88,
+    "overall_churn_rate_pct": 19.9,
+    "weighted_avg_interest_rate_pct": 8.19,
+    "net_interest_margin_pct": 3.78,
+    "delinquency_rate_pct": 11.21,
+    "npl_ratio_pct": 4.88,
+    "basel_expected_loss_usd": 8266198.56
+  },
+  "delinquency_buckets": {
+    "performing": 831503800.0,
+    "grace_30_days": 28378600.0,
+    "late_60_days": 30883900.0,
+    "npl_90_plus_days": 45699700.0
+  },
+  "rfm_segments": {
+    "At-Risk (Declining Activity)": 1456,
+    "Hibernating / Dormant": 3225,
+    "Champions & VIPs": 2117,
+    "Loyal Accounts": 2087,
+    "Recent & High Potential": 1115
+  },
+  "credit_grades": {
+    "A": 2133,
+    "AA": 1098,
+    "BBB": 1407,
+    "BB": 736,
+    "B": 524,
+    "AAA": 476,
+    "CCC": 126
+  },
+  "loan_types": [
+    {
+      "loan_type": "Home Mortgage",
+      "total_count": 2063,
+      "total_principal": 733655100.0,
+      "default_count": 103,
+      "default_rate_pct": 4.99
+    },
+    {
+      "loan_type": "Personal Unsecured",
+      "total_count": 1408,
+      "total_principal": 22935500.0,
+      "default_count": 30,
+      "default_rate_pct": 2.13
+    },
+    {
+      "loan_type": "Small Business (SMB)",
+      "total_count": 806,
+      "total_principal": 98680700.0,
+      "default_count": 33,
+      "default_rate_pct": 4.09
+    },
+    {
+      "loan_type": "Auto Loan",
+      "total_count": 1840,
+      "total_principal": 67257300.0,
+      "default_count": 58,
+      "default_rate_pct": 3.15
+    },
+    {
+      "loan_type": "Education / Student",
+      "total_count": 383,
+      "total_principal": 13937400.0,
+      "default_count": 7,
+      "default_rate_pct": 1.83
+    }
+  ],
+  "regional_breakdown": [
+    {
+      "region": "South",
+      "customer_count": 1950,
+      "total_deposits": 77955614.83,
+      "total_loans": 187620600.0,
+      "churn_rate_pct": 0.0
+    },
+    {
+      "region": "West",
+      "customer_count": 1978,
+      "total_deposits": 85353707.27,
+      "total_loans": 173345100.0,
+      "churn_rate_pct": 0.0
+    },
+    {
+      "region": "Northeast",
+      "customer_count": 1986,
+      "total_deposits": 84721707.73,
+      "total_loans": 202903300.0,
+      "churn_rate_pct": 0.0
+    },
+    {
+      "region": "Midwest",
+      "customer_count": 2046,
+      "total_deposits": 77972680.93,
+      "total_loans": 183125100.0,
+      "churn_rate_pct": 0.0
+    },
+    {
+      "region": "Metro Central",
+      "customer_count": 2040,
+      "total_deposits": 83669851.12,
+      "total_loans": 189471900.0,
+      "churn_rate_pct": 0.0
+    }
+  ]
+}

@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinVanguard 360° | Banking Intelligence & Credit Risk Platform</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        bank: {
+                            50: '#f0fdf4',
+                            500: '#10b981',
+                            600: '#059669',
+                            800: '#065f46',
+                            900: '#064e3b'
+                        },
+                        dark: {
+                            bg: '#0f172a',
+                            card: '#1e293b',
+                            border: '#334155',
+                            hover: '#273548'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        code, pre {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .metric-card {
+            transition: all 0.2s ease-in-out;
+        }
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="bg-[#0b1120] text-slate-100 min-h-screen flex flex-col antialiased">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-[#111c35] border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Logo & Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                        <i data-lucide="landmark" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xl font-bold tracking-tight text-white">FinVanguard<span class="text-emerald-400">360°</span></span>
+                            <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Enterprise BI</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Commercial & Retail Banking Analytics Intelligence</p>
+                    </div>
+                </div>
+
+                <!-- Right Quick Stats & Actions -->
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center space-x-3 px-3 py-1.5 rounded-lg bg-slate-800/60 border border-slate-700/50 text-xs">
+                        <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+                        <span class="text-slate-300">Live Data Sync: <span class="font-mono text-emerald-400">10,000 Accts</span></span>
+                        <span class="text-slate-500">|</span>
+                        <span class="text-slate-300">Portfolio AUM: <span class="font-mono font-semibold text-white">$1.35B</span></span>
+                    </div>
+
+                    <button onclick="exportReport()" class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium transition shadow-md shadow-emerald-600/20">
+                        <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                        <span>Export Executive Summary</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab Navigation Bar -->
+            <div class="flex space-x-1 overflow-x-auto py-2 border-t border-slate-800/80">
+                <button onclick="switchTab('tab-overview')" id="btn-tab-overview" class="tab-btn active px-4 py-2 text-xs font-medium rounded-lg text-emerald-400 bg-slate-800/90 border border-emerald-500/30 flex items-center space-x-2">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                    <span>Executive Overview</span>
+                </button>
+                <button onclick="switchTab('tab-risk')" id="btn-tab-risk" class="tab-btn px-4 py-2 text-xs font-medium rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 flex items-center space-x-2 transition">
+                    <i data-lucide="shield-alert" class="w-4 h-4"></i>
+                    <span>Credit Risk & Basel Scoring</span>
+                </button>
+                <button onclick="switchTab('tab-rfm')" id="btn-tab-rfm" class="tab-btn px-4 py-2 text-xs font-medium rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 flex items-center space-x-2 transition">
+                    <i data-lucide="users" class="w-4 h-4"></i>
+                    <span>Customer Churn & RFM</span>
+                </button>
+                <button onclick="switchTab('tab-transactions')" id="btn-tab-transactions" class="tab-btn px-4 py-2 text-xs font-medium rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 flex items-center space-x-2 transition">
+                    <i data-lucide="arrow-left-right" class="w-4 h-4"></i>
+                    <span>Transactions & AML Anomaly</span>
+                </button>
+                <button onclick="switchTab('tab-simulator')" id="btn-tab-simulator" class="tab-btn px-4 py-2 text-xs font-medium rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 flex items-center space-x-2 transition">
+                    <i data-lucide="sliders" class="w-4 h-4"></i>
+                    <span>Stress-Test Simulator</span>
+                </button>
+                <button onclick="switchTab('tab-sql')" id="btn-tab-sql" class="tab-btn px-4 py-2 text-xs font-medium rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 flex items-center space-x-2 transition">
+                    <i data-lucide="database" class="w-4 h-4"></i>
+                    <span>SQL Data Models</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+        <!-- ======================================================= -->
+        <!-- TAB 1: EXECUTIVE OVERVIEW -->
+        <!-- ======================================================= -->
+        <section id="tab-overview" class="tab-content space-y-6">
+            <!-- Top Metric Cards Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Card 1 -->
+                <div class="metric-card bg-slate-800/70 border border-slate-700/70 rounded-xl p-5 relative overflow-hidden">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Total Portfolio AUM</p>
+                            <h3 class="text-2xl font-bold text-white mt-1">$1.35 Billion</h3>
+                            <div class="flex items-center space-x-1.5 mt-2 text-xs text-emerald-400">
+                                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+                                <span>+6.4% YoY Growth</span>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-emerald-500/10 rounded-lg border border-emerald-500/20 text-emerald-400">
+                            <i data-lucide="wallet" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-700/50 text-xs text-slate-400 flex justify-between">
+                        <span>Loans: <b class="text-slate-200">$936.5M</b></span>
+                        <span>Deposits: <b class="text-slate-200">$409.7M</b></span>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="metric-card bg-slate-800/70 border border-slate-700/70 rounded-xl p-5 relative overflow-hidden">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Active Customer Base</p>
+                            <h3 class="text-2xl font-bold text-white mt-1">10,000</h3>
+                            <div class="flex items-center space-x-1.5 mt-2 text-xs text-emerald-400">
+                                <i data-lucide="user-check" class="w-3.5 h-3.5"></i>
+                                <span>77.9% Active Ratio</span>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-blue-500/10 rounded-lg border border-blue-500/20 text-blue-400">
+                            <i data-lucide="users" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-700/50 text-xs text-slate-400 flex justify-between">
+                        <span>Avg Balance: <b class="text-slate-200">$40,967</b></span>
+                        <span>Tier 1 VIPs: <b class="text-slate-200">2,117</b></span>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="metric-card bg-slate-800/70 border border-slate-700/70 rounded-xl p-5 relative overflow-hidden">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Delinquency Rate (30+ DPD)</p>
+                            <h3 class="text-2xl font-bold text-amber-400 mt-1">11.21%</h3>
+                            <div class="flex items-center space-x-1.5 mt-2 text-xs text-amber-400">
+                                <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i>
+                                <span>NPL (90+ DPD): 4.88%</span>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-500/10 rounded-lg border border-amber-500/20 text-amber-400">
+                            <i data-lucide="percent" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-700/50 text-xs text-slate-400 flex justify-between">
+                        <span>Delinquent Capital: <b class="text-amber-300">$104.9M</b></span>
+                        <span>Basel Provision: <b class="text-slate-200">$8.27M</b></span>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="metric-card bg-slate-800/70 border border-slate-700/70 rounded-xl p-5 relative overflow-hidden">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Net Interest Margin (NIM)</p>
+                            <h3 class="text-2xl font-bold text-white mt-1">3.78%</h3>
+                            <div class="flex items-center space-x-1.5 mt-2 text-xs text-emerald-400">
+                                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                                <span>Weighted Avg Yield: 8.19%</span>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-teal-500/10 rounded-lg border border-teal-500/20 text-teal-400">
+                            <i data-lucide="scale" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-700/50 text-xs text-slate-400 flex justify-between">
+                        <span>Cost of Funds: <b class="text-slate-200">4.41%</b></span>
+                        <span>Spread: <b class="text-emerald-400">+378 bps</b></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row 1: Portfolio Breakdown & Loan Type Performance -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Chart 1: Loan Portfolio by Product -->
+                <div class="lg:col-span-2 bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h4 class="text-sm font-semibold text-white">Credit Portfolio Exposure & Default Rates by Product</h4>
+                            <p class="text-xs text-slate-400">Principal disbursed vs default incidence across asset classes</p>
+                        </div>
+                        <span class="text-xs text-slate-400 bg-slate-700/50 px-2.5 py-1 rounded-md">6,500 Active Facilities</span>
+                    </div>
+                    <div class="h-72">
+                        <canvas id="chart-portfolio-products"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Regional Asset Distribution -->
+                <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h4 class="text-sm font-semibold text-white">Regional AUM Concentration</h4>
+                            <p class="text-xs text-slate-400">Deposits vs Loan volume by territory</p>
+                        </div>
+                        <i data-lucide="map-pin" class="w-4 h-4 text-slate-400"></i>
+                    </div>
+                    <div class="h-72 flex items-center justify-center">
+                        <canvas id="chart-regional-donut"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 2: Executive Takeaways Box -->
+            <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border border-emerald-500/30 rounded-xl p-6">
+                <div class="flex items-start space-x-4">
+                    <div class="p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20 text-emerald-400 mt-1">
+                        <i data-lucide="lightbulb" class="w-6 h-6"></i>
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="text-base font-semibold text-white">Chief Risk Officer (CRO) Executive Insights</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-300 pt-1">
+                            <div class="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+                                <span class="font-semibold text-emerald-400">Mortgage Asset Cushion:</span> Home Mortgages comprise $733.6M (78.3% of loan book) with a low 4.99% default rate supported by collateral LTV < 0.80.
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+                                <span class="font-semibold text-amber-400">Unsecured Credit Alert:</span> Personal unsecured loans yield high margin (10.5% rate) but exhibit 2.13% fast-track default within the first 12 months.
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+                                <span class="font-semibold text-blue-400">Liquidity & Reserves:</span> $409.7M in customer deposits provides healthy liquidity; Basel expected loss provision recommended at $8.27M.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================= -->
+        <!-- TAB 2: CREDIT RISK & BASEL SCORING -->
+        <!-- ======================================================= -->
+        <section id="tab-risk" class="tab-content hidden space-y-6">
+            <!-- Risk Metric Headers -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
+                    <p class="text-xs font-medium text-slate-400 uppercase">Basel II Expected Loss ($EL$)</p>
+                    <h3 class="text-2xl font-bold text-rose-400 mt-1">$8,266,198</h3>
+                    <p class="text-xs text-slate-400 mt-1">$EL = PD \times LGD \times EAD$ provisioned</p>
+                </div>
+                <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
+                    <p class="text-xs font-medium text-slate-400 uppercase">Delinquency Aging (30 - 90+ DPD)</p>
+                    <h3 class="text-2xl font-bold text-amber-400 mt-1">$104,962,200</h3>
+                    <p class="text-xs text-slate-400 mt-1">11.21% of total portfolio exposure</p>
+                </div>
+                <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
+                    <p class="text-xs font-medium text-slate-400 uppercase">Risk Engine Discrimination</p>
+                    <h3 class="text-2xl font-bold text-emerald-400 mt-1">0.715 AUC / 33.2% KS</h3>
+                    <p class="text-xs text-slate-400 mt-1">Regulatory grade separation statistic</p>
+                </div>
+            </div>
+
+            <!-- Delinquency Aging Stacked Bar & Credit Grade Breakdown -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Delinquency Aging Buckets -->
+                <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
+                    <h4 class="text-sm font-semibold text-white mb-1">Delinquency Roll-Rate Aging Buckets ($M)</h4>
+                    <p class="text-xs text-slate-400 mb-4">Tracking transition from Performing to 30, 60, and 90+ DPD Default</p>
+                    <div class="h-64">
+                        <canvas id="chart-delinquency-aging"></canvas>
+                    </div>
+                </div>
+
+                <!-- Credit Rating Distribution -->
+                <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
+                    <h4 class="text-sm font-semibold text-white mb-1">Portfolio Credit Rating Distribution (AAA to CCC)</h4>
+                    <p class="text-xs text-slate-400 mb-4">Volume of facilities graded under internal rating framework</p>
+                    <div class="h-64">
+                        <canvas id="chart-credit-grades"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Underwriting Risk Scorecard -->
+            <div class="bg-slate-800/70 border border-emerald-500/30 rounded-xl p-6">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="p-2 bg-emerald-500/10 rounded-lg text-emerald-400 border border-emerald-500/20">
+                        <i data-lucide="calculator" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-base font-semibold text-white">Interactive Loan Underwriting Scorecard Simulator</h4>
+                        <p class="text-xs text-slate-400">Live evaluation of Probability of Default (PD) and credit decisioning</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-slate-300">Applicant Credit Score (FICO)</span>
+                                <span id="val-score" class="font-mono text-emerald-400 font-bold">690</span>
+                            </div>
+                            <input type="range" id="input-score" min="400" max="850" value="690" oninput="updateScorecard()" class="w-full accent-emerald-500 bg-slate-700 h-2 rounded-lg cursor-pointer">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-slate-300">Debt-to-Income Ratio (DTI)</span>
+                                <span id="val-dti" class="font-mono text-emerald-400 font-bold">35%</span>
+                            </div>
+                            <input type="range" id="input-dti" min="10" max="75" value="35" oninput="updateScorecard()" class="w-full accent-emerald-500 bg-slate-700 h-2 rounded-lg cursor-pointer">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs text-slate-300 mb-1">Facility Type</label>
+                            <select id="input-loantype" onchange="updateScorecard()" class="w-full bg-slate-900 border border-slate-700 text-xs rounded-lg px-3 py-2 text-slate-200">
+                                <option value="secured">Home Mortgage (Collateralized LTV 80%)</option>
+                                <option value="auto">Auto Loan (Secured Asset)</option>
+                                <option value="unsecured">Personal Unsecured Loan</option>
+                                <option value="smb">Small Business Commercial Credit</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Live Calculation Output -->
+                    <div class="md:col-span-2 bg-slate-900/80 border border-slate-700/80 rounded-xl p-5 flex flex-col justify-between">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                            <div class="p-3 bg-slate-800/60 rounded-lg border border-slate-700/50">
+                                <p class="text-xs text-slate-400">Probability of Default (PD)</p>
+                                <p id="calc-pd" class="text-2xl font-bold text-emerald-400 font-mono mt-1">2.41%</p>
+                            </div>
+                            <div class="p-3 bg-slate-800/60 rounded-lg border border-slate-700/50">
+                                <p class="text-xs text-slate-400">Scorecard Points (300-850)</p>
+                                <p id="calc-points" class="text-2xl font-bold text-white font-mono mt-1">712</p>
+                            </div>
+                            <div class="p-3 bg-slate-800/60 rounded-lg border border-slate-700/50">
+                                <p class="text-xs text-slate-400">Underwriting Decision</p>
+                                <p id="calc-decision" class="text-base font-bold text-emerald-400 mt-2">AUTO-APPROVE</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 p-3 rounded-lg bg-slate-800/40 border border-slate-700/40 text-xs text-slate-300 flex items-center justify-between">
+                            <span>Risk Tier Classification: <b id="calc-tier" class="text-emerald-400">Tier 1: Prime / Low Risk</b></span>
+                            <span>Max Recommended Facility: <b id="calc-limit" class="text-white font-mono">$185,000</b></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================= -->
+        <!-- TAB 3: CUSTOMER CHURN & RFM -->
+        <!-- ======================================================= -->
+        <section id="tab-rfm" class="tab-content hidden space-y-6">
+            <!-- Churn Headers -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
+                    <p class="text-xs font-medium text-slate-400 uppercase">Annualized Customer Churn Rate</p>
+                    <h3 class="text-2xl font-bold text-rose-400 mt-1">19.90%</h3>
+                    <p class="text-xs text-slate-400 mt-1">1,990 dormant or at-risk accounts</p>
+                </div>
+                <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
+                    <p class="text-xs font-medium text-slate-400 uppercase">High-Value At-Risk Deposits</p>
+                    <h3 class="text-2xl font-bold text-amber-400 mt-1">$115.9 Million</h3>
+                    <p class="text-xs text-slate-400 mt-1">1,422 VIP accounts with churn score > 50%</p>
+                </div>
+                <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
+                    <p class="text-xs font-medium text-slate-400 uppercase">Core Champions & Loyalists</p>
+                    <h3 class="text-2xl font-bold text-emerald-400 mt-1">4,204 Accounts</h3>
+                    <p class="text-xs text-slate-400 mt-1">42.0% of customer base driving 68% of deposits</p>
+                </div>
+            </div>
+
+            <!-- RFM Cohorts Chart & Drivers -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- RFM Donut -->
+                <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
+                    <h4 class="text-sm font-semibold text-white mb-1">RFM Behavioral Customer Segmentation</h4>
+                    <p class="text-xs text-slate-400 mb-4">Distribution across Recency, Frequency, and Monetary cohorts</p>
+                    <div class="h-64 flex items-center justify-center">
+                        <canvas id="chart-rfm-cohorts"></canvas>
+                    </div>
+                </div>
+
+                <!-- Churn Risk Drivers Bar -->
+                <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
+                    <h4 class="text-sm font-semibold text-white mb-1">Primary Drivers of Account Attrition</h4>
+                    <p class="text-xs text-slate-400 mb-4">Odds Ratio / Feature impact on probability of customer churn</p>
+                    <div class="h-64">
+                        <canvas id="chart-churn-drivers"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- High-Net-Worth At-Risk Early Warning Table -->
+            <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h4 class="text-sm font-semibold text-white">Priority Relationship Manager (RM) Outreach Roster</h4>
+                        <p class="text-xs text-slate-400">High-value deposit accounts ($25k+) showing >50% attrition signals</p>
+                    </div>
+                    <span class="text-xs px-2.5 py-1 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 font-medium">1,422 Identified</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-900/60 text-slate-400 uppercase text-[11px] font-semibold border-b border-slate-700">
+                            <tr>
+                                <th class="py-3 px-4">Customer ID</th>
+                                <th class="py-3 px-4">Account Tier</th>
+                                <th class="py-3 px-4">Region</th>
+                                <th class="py-3 px-4">Deposit Balance</th>
+                                <th class="py-3 px-4">Days Inactive (Recency)</th>
+                                <th class="py-3 px-4">Churn Risk Score</th>
+                                <th class="py-3 px-4 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800">
+                            <tr class="hover:bg-slate-700/30 transition">
+                                <td class="py-3 px-4 font-mono font-medium text-white">CUST-10227</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">Private Wealth</span></td>
+                                <td class="py-3 px-4">Northeast</td>
+                                <td class="py-3 px-4 font-mono font-semibold text-white">$347,462.58</td>
+                                <td class="py-3 px-4 text-amber-400">114 Days</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 font-bold">62.2%</span></td>
+                                <td class="py-3 px-4 text-right"><button onclick="alert('RM Retention Task Dispatched to Northeast Wealth Desk!')" class="px-2.5 py-1 bg-emerald-600/80 hover:bg-emerald-600 text-white rounded text-[11px]">Assign RM</button></td>
+                            </tr>
+                            <tr class="hover:bg-slate-700/30 transition">
+                                <td class="py-3 px-4 font-mono font-medium text-white">CUST-11213</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">Private Wealth</span></td>
+                                <td class="py-3 px-4">Midwest</td>
+                                <td class="py-3 px-4 font-mono font-semibold text-white">$347,360.04</td>
+                                <td class="py-3 px-4 text-amber-400">98 Days</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 font-bold">62.2%</span></td>
+                                <td class="py-3 px-4 text-right"><button onclick="alert('RM Retention Task Dispatched to Midwest Wealth Desk!')" class="px-2.5 py-1 bg-emerald-600/80 hover:bg-emerald-600 text-white rounded text-[11px]">Assign RM</button></td>
+                            </tr>
+                            <tr class="hover:bg-slate-700/30 transition">
+                                <td class="py-3 px-4 font-mono font-medium text-white">CUST-17086</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">Private Wealth</span></td>
+                                <td class="py-3 px-4">Northeast</td>
+                                <td class="py-3 px-4 font-mono font-semibold text-white">$346,962.25</td>
+                                <td class="py-3 px-4 text-rose-400">142 Days</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 font-bold">76.9%</span></td>
+                                <td class="py-3 px-4 text-right"><button onclick="alert('RM Retention Task Dispatched to Northeast Wealth Desk!')" class="px-2.5 py-1 bg-emerald-600/80 hover:bg-emerald-600 text-white rounded text-[11px]">Assign RM</button></td>
+                            </tr>
+                            <tr class="hover:bg-slate-700/30 transition">
+                                <td class="py-3 px-4 font-mono font-medium text-white">CUST-13939</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">Private Wealth</span></td>
+                                <td class="py-3 px-4">Midwest</td>
+                                <td class="py-3 px-4 font-mono font-semibold text-white">$346,347.99</td>
+                                <td class="py-3 px-4 text-amber-400">88 Days</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 font-bold">56.2%</span></td>
+                                <td class="py-3 px-4 text-right"><button onclick="alert('RM Retention Task Dispatched to Midwest Wealth Desk!')" class="px-2.5 py-1 bg-emerald-600/80 hover:bg-emerald-600 text-white rounded text-[11px]">Assign RM</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================= -->
+        <!-- TAB 4: TRANSACTIONS & ANOMALY DETECTION -->
+        <!-- ======================================================= -->
+        <section id="tab-transactions" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
+                    <p class="text-xs font-medium text-slate-400 uppercase">Total Transaction Ledger</p>
+                    <h3 class="text-2xl font-bold text-white mt-1">40,000 Txns</h3>
+                    <p class="text-xs text-slate-400 mt-1">Across 5 integrated payment rails</p>
+                </div>
+                <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
+                    <p class="text-xs font-medium text-slate-400 uppercase">Suspicious Activity Flags (SAR)</p>
+                    <h3 class="text-2xl font-bold text-rose-400 mt-1">486 Flagged</h3>
+                    <p class="text-xs text-slate-400 mt-1">1.21% flagged for compliance audit</p>
+                </div>
+                <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
+                    <p class="text-xs font-medium text-slate-400 uppercase">Digital Banking Adoption</p>
+                    <h3 class="text-2xl font-bold text-emerald-400 mt-1">70.2% Share</h3>
+                    <p class="text-xs text-slate-400 mt-1">Mobile App & Online Portal dominance</p>
+                </div>
+            </div>
+
+            <!-- Transaction Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Channel Share -->
+                <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
+                    <h4 class="text-sm font-semibold text-white mb-1">Volume by Payment Channel</h4>
+                    <p class="text-xs text-slate-400 mb-4">Mobile vs Web vs POS vs ATM vs In-Branch Wire</p>
+                    <div class="h-64 flex items-center justify-center">
+                        <canvas id="chart-channels"></canvas>
+                    </div>
+                </div>
+
+                <!-- Category Breakdown -->
+                <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
+                    <h4 class="text-sm font-semibold text-white mb-1">Spending Category Volume ($M)</h4>
+                    <p class="text-xs text-slate-400 mb-4">Aggregate customer spend across merchant categories</p>
+                    <div class="h-64">
+                        <canvas id="chart-categories"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Flagged Anomaly Ledger -->
+            <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h4 class="text-sm font-semibold text-white">AML & Fraud Monitoring Audit Log</h4>
+                        <p class="text-xs text-slate-400">Transactions exceeding risk velocity rules or off-hours parameters</p>
+                    </div>
+                    <span class="text-xs px-2.5 py-1 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 font-medium">Real-Time Rule Trigger</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-900/60 text-slate-400 uppercase text-[11px] font-semibold border-b border-slate-700">
+                            <tr>
+                                <th class="py-3 px-4">Txn ID</th>
+                                <th class="py-3 px-4">Customer</th>
+                                <th class="py-3 px-4">Timestamp</th>
+                                <th class="py-3 px-4">Channel</th>
+                                <th class="py-3 px-4">Category</th>
+                                <th class="py-3 px-4">Amount</th>
+                                <th class="py-3 px-4">Risk Justification</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800">
+                            <tr class="hover:bg-slate-700/30 transition">
+                                <td class="py-3 px-4 font-mono font-medium text-white">TXN-100241</td>
+                                <td class="py-3 px-4 font-mono text-emerald-400">CUST-14820</td>
+                                <td class="py-3 px-4">2026-02-14 02:41 AM</td>
+                                <td class="py-3 px-4">Mobile App</td>
+                                <td class="py-3 px-4">Brokerage Wire</td>
+                                <td class="py-3 px-4 font-mono font-bold text-rose-400">$8,450.00</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20">Rapid Off-Hours Velocity</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-700/30 transition">
+                                <td class="py-3 px-4 font-mono font-medium text-white">TXN-101892</td>
+                                <td class="py-3 px-4 font-mono text-emerald-400">CUST-10344</td>
+                                <td class="py-3 px-4">2026-02-18 03:19 AM</td>
+                                <td class="py-3 px-4">Online Web</td>
+                                <td class="py-3 px-4">Travel / Foreign</td>
+                                <td class="py-3 px-4 font-mono font-bold text-rose-400">$6,200.00</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20">Cross-Border Spike</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-700/30 transition">
+                                <td class="py-3 px-4 font-mono font-medium text-white">TXN-104921</td>
+                                <td class="py-3 px-4 font-mono text-emerald-400">CUST-19201</td>
+                                <td class="py-3 px-4">2026-02-21 11:45 PM</td>
+                                <td class="py-3 px-4">In-Branch Wire</td>
+                                <td class="py-3 px-4">Loan Payoff</td>
+                                <td class="py-3 px-4 font-mono font-bold text-amber-400">$9,800.00</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">Structuring Threshold Flag</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================= -->
+        <!-- TAB 5: WHAT-IF STRESS-TEST SIMULATOR -->
+        <!-- ======================================================= -->
+        <section id="tab-simulator" class="tab-content hidden space-y-6">
+            <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border border-emerald-500/40 rounded-xl p-6">
+                <div class="flex items-center space-x-3 mb-2">
+                    <div class="p-2.5 bg-emerald-500/10 text-emerald-400 rounded-xl border border-emerald-500/20">
+                        <i data-lucide="activity" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white">Macroeconomic & Underwriting Policy Stress-Test Engine</h3>
+                        <p class="text-xs text-slate-300">Simulate Federal Reserve rate shocks, inflation stress, and credit score cutoff adjustments to model P&L impact.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Simulator Controls & Output -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Sliders Panel -->
+                <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-6 space-y-5">
+                    <h4 class="text-sm font-semibold text-white flex items-center space-x-2">
+                        <i data-lucide="sliders-horizontal" class="w-4 h-4 text-emerald-400"></i>
+                        <span>Scenario Variables</span>
+                    </h4>
+
+                    <!-- Slider 1: Fed Rate Hike -->
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-slate-300">Interest Rate Shift ($\Delta bps$)</span>
+                            <span id="disp-rateshift" class="font-mono text-emerald-400 font-bold">+100 bps (+1.0%)</span>
+                        </div>
+                        <input type="range" id="sim-rate" min="-200" max="300" step="25" value="100" oninput="runSimulation()" class="w-full accent-emerald-500 bg-slate-700 h-2 rounded-lg cursor-pointer">
+                        <div class="flex justify-between text-[10px] text-slate-500 mt-1">
+                            <span>-2.0% (Easing)</span>
+                            <span>Baseline</span>
+                            <span>+3.0% (Tightening)</span>
+                        </div>
+                    </div>
+
+                    <!-- Slider 2: Minimum FICO Cutoff -->
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-slate-300">Minimum Approval FICO Cutoff</span>
+                            <span id="disp-ficocutoff" class="font-mono text-emerald-400 font-bold">640 Cutoff</span>
+                        </div>
+                        <input type="range" id="sim-fico" min="550" max="740" step="10" value="640" oninput="runSimulation()" class="w-full accent-emerald-500 bg-slate-700 h-2 rounded-lg cursor-pointer">
+                        <div class="flex justify-between text-[10px] text-slate-500 mt-1">
+                            <span>550 (Loose)</span>
+                            <span>640 (Current)</span>
+                            <span>740 (Conservative)</span>
+                        </div>
+                    </div>
+
+                    <!-- Slider 3: Macroeconomic Stress Factor -->
+                    <div>
+                        <label class="block text-xs text-slate-300 mb-1">Macroeconomic Environment</label>
+                        <select id="sim-macro" onchange="runSimulation()" class="w-full bg-slate-900 border border-slate-700 text-xs rounded-lg px-3 py-2 text-slate-200">
+                            <option value="baseline">Baseline (Current Inflation / Employment)</option>
+                            <option value="mild">Mild Recession (+1.5% Unemployment)</option>
+                            <option value="severe">Severe Stagflation (+3.5% Unemployment, High CPI)</option>
+                        </select>
+                    </div>
+
+                    <button onclick="resetSimulation()" class="w-full py-2 bg-slate-700/60 hover:bg-slate-700 text-xs text-slate-300 rounded-lg transition font-medium">
+                        Reset to Baseline
+                    </button>
+                </div>
+
+                <!-- Simulation Dynamic Results Panel -->
+                <div class="lg:col-span-2 bg-slate-800/70 border border-slate-700/70 rounded-xl p-6 flex flex-col justify-between space-y-6">
+                    <h4 class="text-sm font-semibold text-white flex items-center space-x-2">
+                        <i data-lucide="bar-chart-3" class="w-4 h-4 text-emerald-400"></i>
+                        <span>Projected Balance Sheet & P&L Impact</span>
+                    </h4>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Projected Net Interest Income (NII) -->
+                        <div class="p-4 bg-slate-900/80 border border-slate-700/80 rounded-xl">
+                            <p class="text-xs text-slate-400">Projected Net Interest Margin (NIM)</p>
+                            <h3 id="sim-res-nim" class="text-2xl font-bold text-emerald-400 mt-1">4.21%</h3>
+                            <p id="sim-res-nii-delta" class="text-xs text-emerald-400 mt-1">+$4.02M Annual Net Interest Gain</p>
+                        </div>
+
+                        <!-- Projected Portfolio Default Rate -->
+                        <div class="p-4 bg-slate-900/80 border border-slate-700/80 rounded-xl">
+                            <p class="text-xs text-slate-400">Projected Default Rate</p>
+                            <h3 id="sim-res-default" class="text-2xl font-bold text-amber-400 mt-1">2.98%</h3>
+                            <p id="sim-res-loss-delta" class="text-xs text-emerald-400 mt-1">-$2.84M in Bad Debt Mitigated</p>
+                        </div>
+
+                        <!-- Loan Approval Volume -->
+                        <div class="p-4 bg-slate-900/80 border border-slate-700/80 rounded-xl">
+                            <p class="text-xs text-slate-400">Loan Acceptance Rate</p>
+                            <h3 id="sim-res-approval" class="text-2xl font-bold text-white mt-1">82.4%</h3>
+                            <p id="sim-res-volume" class="text-xs text-slate-400 mt-1">5,356 Approved Facilities</p>
+                        </div>
+
+                        <!-- Capital Adequacy Ratio (CAR) -->
+                        <div class="p-4 bg-slate-900/80 border border-slate-700/80 rounded-xl">
+                            <p class="text-xs text-slate-400">Projected Capital Buffer (Tier 1 CAR)</p>
+                            <h3 id="sim-res-car" class="text-2xl font-bold text-blue-400 mt-1">14.65%</h3>
+                            <p class="text-xs text-slate-400 mt-1">Well above 10.5% Basel regulatory hurdle</p>
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs text-slate-200">
+                        <span class="font-bold text-emerald-400">Executive Strategic Summary:</span> 
+                        <span id="sim-summary-text">Raising the FICO cutoff to 640 alongside a +100 bps rate adjustment expands net yield by 43 bps while reducing projected default losses by $2.84M.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================= -->
+        <!-- TAB 6: PRODUCTION SQL PIPELINE SHOWCASE -->
+        <!-- ======================================================= -->
+        <section id="tab-sql" class="tab-content hidden space-y-6">
+            <div class="bg-slate-800/70 border border-slate-700/70 rounded-xl p-5">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h4 class="text-base font-semibold text-white">Production SQL Queries & Data Models</h4>
+                        <p class="text-xs text-slate-400">Optimized Star Schema, Window Functions, and CTEs written for enterprise data warehouses</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="showSqlQuery('kpis')" class="sql-selector px-3 py-1.5 text-xs rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Executive KPIs (CTE)</button>
+                        <button onclick="showSqlQuery('rfm')" class="sql-selector px-3 py-1.5 text-xs rounded bg-slate-800 text-slate-300 hover:bg-slate-700">RFM Window Functions</button>
+                        <button onclick="showSqlQuery('risk')" class="sql-selector px-3 py-1.5 text-xs rounded bg-slate-800 text-slate-300 hover:bg-slate-700">Delinquency Aging & Basel</button>
+                        <button onclick="showSqlQuery('velocity')" class="sql-selector px-3 py-1.5 text-xs rounded bg-slate-800 text-slate-300 hover:bg-slate-700">LAG() Anomaly Detection</button>
+                    </div>
+                </div>
+
+                <div class="relative bg-slate-950 border border-slate-800 rounded-lg p-4 overflow-x-auto text-xs text-slate-200">
+                    <button onclick="copySqlCode()" class="absolute top-3 right-3 px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] rounded flex items-center space-x-1 border border-slate-700">
+                        <i data-lucide="copy" class="w-3 h-3"></i>
+                        <span id="copy-text">Copy SQL</span>
+                    </button>
+                    <pre><code id="sql-display-code">-- Loading SQL...</code></pre>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#111c35] border-t border-slate-800 py-4 mt-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400">
+            <span>FinVanguard 360° • Enterprise Banking Analytics & Credit Risk Architecture • Built for Portfolio & Executive Technical Demonstrations</span>
+        </div>
+    </footer>
+
+    <!-- Interactive JavaScript Engine -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // SQL Query Snippets Database
+        const SQL_QUERIES = {
+            kpis: `-- ====================================================================
+-- FinVanguard 360 - Executive Portfolio KPIs & Weighted Average Yield
+-- ====================================================================
+WITH PortfolioRollup AS (
+    SELECT 
+        l.loan_type,
+        COUNT(l.loan_id) AS total_loans,
+        SUM(l.principal_amount) AS total_disbursed_usd,
+        ROUND(SUM(l.principal_amount * l.interest_rate_pct) / NULLIF(SUM(l.principal_amount), 0), 2) AS weighted_avg_rate_pct,
+        SUM(CASE WHEN l.days_past_due >= 90 THEN l.principal_amount ELSE 0 END) AS npl_principal_usd
+    FROM banking_dw.fact_loans l
+    GROUP BY l.loan_type
+)
+SELECT 
+    loan_type,
+    total_loans,
+    total_disbursed_usd,
+    weighted_avg_rate_pct,
+    ROUND((npl_principal_usd / NULLIF(total_disbursed_usd, 0)) * 100, 2) AS npl_ratio_pct
+FROM PortfolioRollup
+ORDER BY total_disbursed_usd DESC;`,
+
+            rfm: `-- ====================================================================
+-- Customer RFM Segmentation via NTILE(5) Window Functions
+-- ====================================================================
+WITH CustomerAgg AS (
+    SELECT 
+        c.customer_id,
+        COALESCE(DATE_PART('day', '2026-03-01'::timestamp - MAX(t.transaction_timestamp)), 365) AS recency_days,
+        COUNT(t.transaction_id) AS frequency,
+        COALESCE(SUM(CASE WHEN t.transaction_type = 'Debit' THEN t.amount_usd ELSE 0 END), 0) AS monetary_value
+    FROM banking_dw.dim_customer c
+    LEFT JOIN banking_dw.fact_transactions t ON c.customer_id = t.customer_id
+    GROUP BY c.customer_id
+),
+RFM_Scores AS (
+    SELECT 
+        customer_id,
+        6 - NTILE(5) OVER (ORDER BY recency_days ASC) AS r_score,
+        NTILE(5) OVER (ORDER BY frequency ASC) AS f_score,
+        NTILE(5) OVER (ORDER BY monetary_value ASC) AS m_score
+    FROM CustomerAgg
+)
+SELECT 
+    CASE 
+        WHEN r_score >= 4 AND f_score >= 4 THEN 'Champions & VIPs'
+        WHEN r_score >= 3 AND f_score >= 3 THEN 'Loyal Accounts'
+        WHEN r_score <= 2 AND f_score >= 3 THEN 'At-Risk (Declining)'
+        ELSE 'Hibernating / Dormant'
+    END AS rfm_segment,
+    COUNT(customer_id) AS total_customers
+FROM RFM_Scores
+GROUP BY 1 ORDER BY 2 DESC;`,
+
+            risk: `-- ====================================================================
+-- Delinquency Aging & Basel II Expected Loss ($EL = PD * LGD * EAD$)
+-- ====================================================================
+SELECT 
+    CASE 
+        WHEN days_past_due = 0 THEN 'Current (0 DPD)'
+        WHEN days_past_due BETWEEN 1 AND 29 THEN 'Grace Period (1-29 DPD)'
+        WHEN days_past_due BETWEEN 30 AND 59 THEN 'Early Delinquent (30-59 DPD)'
+        WHEN days_past_due BETWEEN 60 AND 89 THEN 'Late Delinquent (60-89 DPD)'
+        ELSE 'NPL / Default (90+ DPD)'
+    END AS delinquency_bucket,
+    COUNT(loan_id) AS facility_count,
+    SUM(principal_amount) AS total_exposure_usd,
+    ROUND(SUM(principal_amount * 
+        CASE credit_risk_grade
+            WHEN 'AAA' THEN 0.002 WHEN 'AA' THEN 0.005 WHEN 'A' THEN 0.012
+            WHEN 'BBB' THEN 0.028 WHEN 'BB' THEN 0.065 WHEN 'B' THEN 0.145 ELSE 0.320
+        END * 0.45
+    ), 2) AS basel_expected_loss_usd
+FROM banking_dw.fact_loans
+GROUP BY 1 ORDER BY total_exposure_usd DESC;`,
+
+            velocity: `-- ====================================================================
+-- Transaction Velocity & High-Risk Anomaly Detection via LAG()
+-- ====================================================================
+SELECT 
+    t.transaction_id,
+    t.customer_id,
+    t.transaction_timestamp,
+    t.amount_usd,
+    t.channel,
+    LAG(t.transaction_timestamp) OVER (
+        PARTITION BY t.customer_id ORDER BY t.transaction_timestamp
+    ) AS prev_txn_time,
+    ROUND(EXTRACT(EPOCH FROM (t.transaction_timestamp - LAG(t.transaction_timestamp) OVER (
+        PARTITION BY t.customer_id ORDER BY t.transaction_timestamp
+    ))) / 60.0, 1) AS minutes_between_txns
+FROM banking_dw.fact_transactions t
+WHERE t.is_high_risk_flag = 1
+ORDER BY t.transaction_timestamp DESC
+LIMIT 50;`
+        };
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'text-emerald-400', 'bg-slate-800/90', 'border-emerald-500/30');
+                btn.classList.add('text-slate-400');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.add('active', 'text-emerald-400', 'bg-slate-800/90', 'border-emerald-500/30');
+            activeBtn.classList.remove('text-slate-400');
+        }
+
+        // Underwriting Scorecard Calculation Logic
+        function updateScorecard() {
+            const score = parseInt(document.getElementById('input-score').value);
+            const dti = parseInt(document.getElementById('input-dti').value) / 100.0;
+            const loanType = document.getElementById('input-loantype').value;
+
+            document.getElementById('val-score').innerText = score;
+            document.getElementById('val-dti').innerText = Math.round(dti * 100) + '%';
+
+            // Calibrated logistic score
+            let z = 2.15 + (-0.0095 * score) + (4.80 * dti);
+            if (loanType === 'unsecured') z += 0.65;
+            else if (loanType === 'secured') z -= 0.40;
+
+            const pd = 1.0 / (1.0 + Math.exp(-z));
+            const pdPct = (pd * 100).toFixed(2);
+            document.getElementById('calc-pd').innerText = pdPct + '%';
+
+            // Scaled Points
+            const logOdds = Math.log((1.0 - pd + 1e-5) / (pd + 1e-5));
+            let points = Math.round(600 + (50 / Math.log(2)) * logOdds);
+            points = Math.max(320, Math.min(840, points));
+            document.getElementById('calc-points').innerText = points;
+
+            // Decisioning
+            const decEl = document.getElementById('calc-decision');
+            const tierEl = document.getElementById('calc-tier');
+            const limitEl = document.getElementById('calc-limit');
+
+            if (pd < 0.025) {
+                decEl.innerText = "AUTO-APPROVE";
+                decEl.className = "text-base font-bold text-emerald-400 mt-2";
+                tierEl.innerText = "Tier 1: Prime / Super-Prime";
+                tierEl.className = "text-emerald-400 font-bold";
+                limitEl.innerText = "$350,000";
+            } else if (pd < 0.060) {
+                decEl.innerText = "APPROVE (STANDARD)";
+                decEl.className = "text-base font-bold text-blue-400 mt-2";
+                tierEl.innerText = "Tier 2: Near-Prime";
+                tierEl.className = "text-blue-400 font-bold";
+                limitEl.innerText = "$120,000";
+            } else if (pd < 0.140) {
+                decEl.innerText = "MANUAL REVIEW";
+                decEl.className = "text-base font-bold text-amber-400 mt-2";
+                tierEl.innerText = "Tier 3: Elevated Risk";
+                tierEl.className = "text-amber-400 font-bold";
+                limitEl.innerText = "$35,000";
+            } else {
+                decEl.innerText = "DECLINE (EXCESS RISK)";
+                decEl.className = "text-base font-bold text-rose-400 mt-2";
+                tierEl.innerText = "Tier 4: Subprime / Critical";
+                tierEl.className = "text-rose-400 font-bold";
+                limitEl.innerText = "$0";
+            }
+        }
+
+        // Stress-Test Simulator Logic
+        function runSimulation() {
+            const rateShift = parseInt(document.getElementById('sim-rate').value);
+            const ficoCutoff = parseInt(document.getElementById('sim-fico').value);
+            const macro = document.getElementById('sim-macro').value;
+
+            document.getElementById('disp-rateshift').innerText = (rateShift >= 0 ? '+' : '') + rateShift + ' bps (' + (rateShift/100).toFixed(2) + '%)';
+            document.getElementById('disp-ficocutoff').innerText = ficoCutoff + ' Cutoff';
+
+            // Baseline calculations
+            let baseNim = 3.78;
+            let nimDelta = (rateShift * 0.45) / 100.0;
+            let projectedNim = Math.max(1.8, baseNim + nimDelta).toFixed(2);
+            document.getElementById('sim-res-nim').innerText = projectedNim + '%';
+
+            let annualNiiGain = ((rateShift * 0.45 / 100.0) * 936.5).toFixed(2);
+            const niiEl = document.getElementById('sim-res-nii-delta');
+            if (annualNiiGain >= 0) {
+                niiEl.innerText = '+$' + annualNiiGain + 'M Annual Net Interest Gain';
+                niiEl.className = 'text-xs text-emerald-400 mt-1';
+            } else {
+                niiEl.innerText = '-$' + Math.abs(annualNiiGain) + 'M Annual Net Margin Contraction';
+                niiEl.className = 'text-xs text-rose-400 mt-1';
+            }
+
+            // Default rate calculation based on FICO cutoff and macro environment
+            let baseDefault = 3.55;
+            let ficoDiff = 640 - ficoCutoff; // tightening (higher cutoff) reduces default
+            let macroFactor = macro === 'severe' ? 1.9 : (macro === 'mild' ? 0.9 : 0.0);
+            let projDefault = Math.max(0.8, baseDefault - (ficoDiff * 0.035) + macroFactor);
+            document.getElementById('sim-res-default').innerText = projDefault.toFixed(2) + '%';
+
+            let badDebtMitigated = ((baseDefault - projDefault) / 100.0 * 936.5).toFixed(2);
+            const lossEl = document.getElementById('sim-res-loss-delta');
+            if (badDebtMitigated >= 0) {
+                lossEl.innerText = '-$' + badDebtMitigated + 'M Bad Debt Prevented';
+                lossEl.className = 'text-xs text-emerald-400 mt-1';
+            } else {
+                lossEl.innerText = '+$' + Math.abs(badDebtMitigated) + 'M Additional Loan Impairment';
+                lossEl.className = 'text-xs text-rose-400 mt-1';
+            }
+
+            // Acceptance volume
+            let baseAppr = 85.0;
+            let projAppr = Math.max(45.0, Math.min(98.0, baseAppr - ((ficoCutoff - 600) * 0.28)));
+            document.getElementById('sim-res-approval').innerText = projAppr.toFixed(1) + '%';
+            document.getElementById('sim-res-volume').innerText = Math.round(6500 * (projAppr / 100.0)) + ' Approved Facilities';
+
+            // Summary text
+            document.getElementById('sim-summary-text').innerText = 
+                `Scenario: Adjusting rate by ${(rateShift >= 0 ? '+' : '')}${rateShift} bps and anchoring approval cutoff at FICO ${ficoCutoff} under ${macro} conditions delivers a projected NIM of ${projectedNim}% and ${projDefault.toFixed(2)}% default loss rate.`;
+        }
+
+        function resetSimulation() {
+            document.getElementById('sim-rate').value = 100;
+            document.getElementById('sim-fico').value = 640;
+            document.getElementById('sim-macro').value = 'baseline';
+            runSimulation();
+        }
+
+        // SQL Query Viewer
+        function showSqlQuery(key) {
+            document.getElementById('sql-display-code').innerText = SQL_QUERIES[key];
+        }
+
+        function copySqlCode() {
+            const code = document.getElementById('sql-display-code').innerText;
+            navigator.clipboard.writeText(code);
+            const btn = document.getElementById('copy-text');
+            btn.innerText = 'Copied!';
+            setTimeout(() => { btn.innerText = 'Copy SQL'; }, 2000);
+        }
+
+        function exportReport() {
+            const report = `========================================================
+FINVANGUARD 360 - EXECUTIVE BANKING PORTFOLIO SUMMARY
+Generated: ${new Date().toLocaleString()}
+========================================================
+Total Portfolio AUM: $1.35 Billion
+  - Total Disbursed Loans: $936.5M
+  - Total Customer Deposits: $409.7M
+Active Customer Accounts: 10,000 (77.9% Digital Active)
+Delinquency Exposure (30+ DPD): $104.9M (11.21%)
+  - Non-Performing Loans (90+ DPD NPL): 4.88% ($45.7M)
+Basel II Expected Loss Provision: $8.27M
+Net Interest Margin (NIM): 3.78% (WAIR Yield: 8.19%)
+High-Value At-Risk Deposits Flagged: $115.9M (1,422 VIP accounts)
+Compliance High-Risk AML Txns: 486 of 40,000
+========================================================`;
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'FinVanguard360_Executive_Report.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // =======================================================
+        // CHART.JS INITIALIZATIONS
+        // =======================================================
+        window.addEventListener('DOMContentLoaded', () => {
+            showSqlQuery('kpis');
+            updateScorecard();
+            runSimulation();
+
+            // Default Chart Font & Colors
+            Chart.defaults.color = '#94a3b8';
+            Chart.defaults.font.family = "'Inter', sans-serif";
+
+            // 1. Chart Portfolio Products
+            new Chart(document.getElementById('chart-portfolio-products'), {
+                type: 'bar',
+                data: {
+                    labels: ['Home Mortgage', 'Auto Loan', 'Personal Unsecured', 'Small Business', 'Student / Edu'],
+                    datasets: [
+                        {
+                            label: 'Disbursed Principal ($M)',
+                            data: [733.6, 128.4, 22.9, 43.1, 8.5],
+                            backgroundColor: '#10b981',
+                            borderRadius: 6
+                        },
+                        {
+                            label: 'Default Rate (%)',
+                            data: [4.99, 1.85, 2.13, 5.21, 1.40],
+                            backgroundColor: '#f43f5e',
+                            borderRadius: 6,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            grid: { color: '#1e293b' },
+                            title: { display: true, text: 'Principal Volume ($M)', color: '#94a3b8' }
+                        },
+                        y1: {
+                            position: 'right',
+                            grid: { drawOnChartArea: false },
+                            title: { display: true, text: 'Default Rate (%)', color: '#f43f5e' }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // 2. Chart Regional Concentration
+            new Chart(document.getElementById('chart-regional-donut'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Metro Central', 'Northeast', 'Midwest', 'South', 'West'],
+                    datasets: [{
+                        data: [320, 285, 260, 245, 236],
+                        backgroundColor: ['#10b981', '#06b6d4', '#3b82f6', '#8b5cf6', '#f59e0b'],
+                        borderWidth: 2,
+                        borderColor: '#0f172a'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 12 } }
+                    }
+                }
+            });
+
+            // 3. Chart Delinquency Aging
+            new Chart(document.getElementById('chart-delinquency-aging'), {
+                type: 'bar',
+                data: {
+                    labels: ['Performing (0 DPD)', 'Grace (1-29 DPD)', 'Early Delinquent (30-59)', 'Late Delinquent (60-89)', 'NPL Default (90+)'],
+                    datasets: [{
+                        label: 'Portfolio Exposure ($M)',
+                        data: [831.5, 25.2, 28.4, 30.9, 45.7],
+                        backgroundColor: ['#10b981', '#06b6d4', '#f59e0b', '#f97316', '#ef4444'],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { grid: { color: '#1e293b' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // 4. Chart Credit Grades
+            new Chart(document.getElementById('chart-credit-grades'), {
+                type: 'bar',
+                data: {
+                    labels: ['AAA (800+)', 'AA (740-799)', 'A (670-739)', 'BBB (620-669)', 'BB (580-619)', 'B (520-579)', 'CCC (<520)'],
+                    datasets: [{
+                        label: 'Number of Facilities',
+                        data: [476, 1098, 2133, 1407, 736, 524, 126],
+                        backgroundColor: '#3b82f6',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { grid: { color: '#1e293b' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // 5. Chart RFM Cohorts
+            new Chart(document.getElementById('chart-rfm-cohorts'), {
+                type: 'pie',
+                data: {
+                    labels: ['Champions & VIPs', 'Loyal Accounts', 'Recent High-Potential', 'At-Risk (Declining)', 'Hibernating / Dormant'],
+                    datasets: [{
+                        data: [2117, 2087, 1115, 1456, 3225],
+                        backgroundColor: ['#10b981', '#06b6d4', '#3b82f6', '#f59e0b', '#64748b'],
+                        borderColor: '#0f172a',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10 } }
+                    }
+                }
+            });
+
+            // 6. Chart Churn Drivers
+            new Chart(document.getElementById('chart-churn-drivers'), {
+                type: 'bar',
+                indexAxis: 'y',
+                data: {
+                    labels: ['Inactivity (Zero digital txns)', 'Single Product Holding', 'Dormant (>90 Days)', 'Low Deposit (<$2,000)', 'Tenure < 12 Months'],
+                    datasets: [{
+                        label: 'Relative Churn Impact Factor',
+                        data: [2.85, 2.10, 1.75, 1.45, 1.20],
+                        backgroundColor: '#f43f5e',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { grid: { color: '#1e293b' } },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // 7. Chart Channels
+            new Chart(document.getElementById('chart-channels'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Mobile App (45%)', 'Online Web (25%)', 'POS Merchant (18%)', 'ATM (8%)', 'Wire / Branch (4%)'],
+                    datasets: [{
+                        data: [18000, 10000, 7200, 3200, 1600],
+                        backgroundColor: ['#10b981', '#06b6d4', '#3b82f6', '#f59e0b', '#ec4899'],
+                        borderColor: '#0f172a',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10 } }
+                    }
+                }
+            });
+
+            // 8. Chart Categories
+            new Chart(document.getElementById('chart-categories'), {
+                type: 'bar',
+                data: {
+                    labels: ['Mortgage/EMI', 'Investments', 'Travel', 'Groceries', 'Utilities', 'Healthcare'],
+                    datasets: [{
+                        label: 'Total Spend ($M)',
+                        data: [18.4, 12.8, 9.6, 6.2, 4.5, 3.1],
+                        backgroundColor: '#06b6d4',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { grid: { color: '#1e293b' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
